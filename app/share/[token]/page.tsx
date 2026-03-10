@@ -103,49 +103,49 @@ export default function SharedNotePage() {
   return (
     <div className="min-h-screen bg-bg">
       <div className="border-b border-border bg-bg-secondary">
-        <div className="max-w-4xl mx-auto px-6 py-3 flex items-center justify-between">
+        <div className="max-w-4xl mx-auto px-3 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm">
             {editable ? (
-              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300">
+              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300 text-xs">
                 <Edit3 className="w-3 h-3" />
                 Editable
               </span>
             ) : (
-              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
+              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 text-xs">
                 <Eye className="w-3 h-3" />
                 Read Only
               </span>
             )}
-            <span className="text-text-secondary">Shared note</span>
+            <span className="text-text-secondary hidden sm:inline">Shared note</span>
           </div>
           <div className="flex items-center gap-2">
             {saving && (
-              <span className="flex items-center gap-1 text-sm text-text-secondary">
+              <span className="flex items-center gap-1 text-xs sm:text-sm text-text-secondary">
                 <Loader2 className="w-3 h-3 animate-spin" />
-                Saving...
+                <span className="hidden sm:inline">Saving...</span>
               </span>
             )}
             {saved && (
-              <span className="flex items-center gap-1 text-sm text-success">
+              <span className="flex items-center gap-1 text-xs sm:text-sm text-success">
                 <Check className="w-3 h-3" />
-                Saved
+                <span className="hidden sm:inline">Saved</span>
               </span>
             )}
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto p-3 sm:p-6">
         {editable ? (
           <input
             type="text"
             value={note.title}
             onChange={(e) => handleTitleChange(e.target.value)}
-            className="w-full text-3xl font-bold bg-transparent border-none outline-none mb-4"
+            className="w-full text-xl sm:text-3xl font-bold bg-transparent border-none outline-none mb-3 sm:mb-4"
             placeholder="Note title..."
           />
         ) : (
-          <h1 className="text-3xl font-bold mb-4">{note.title}</h1>
+          <h1 className="text-xl sm:text-3xl font-bold mb-3 sm:mb-4">{note.title}</h1>
         )}
 
         <TiptapEditor

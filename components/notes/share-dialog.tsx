@@ -61,8 +61,8 @@ export function ShareDialog({ noteId, open, onClose }: Props) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-bg rounded-xl border border-border w-full max-w-lg shadow-xl">
+    <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 sm:p-4">
+      <div className="bg-bg rounded-t-xl sm:rounded-xl border border-border w-full max-w-lg shadow-xl max-h-[80vh] overflow-y-auto">
         <div className="flex items-center justify-between p-4 border-b border-border">
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <LinkIcon className="w-5 h-5" />
@@ -100,9 +100,9 @@ export function ShareDialog({ noteId, open, onClose }: Props) {
               {shares.map((share) => (
                 <div
                   key={share.id}
-                  className="flex items-center gap-2 p-3 bg-bg-secondary rounded-lg"
+                  className="flex flex-wrap sm:flex-nowrap items-center gap-2 p-3 bg-bg-secondary rounded-lg"
                 >
-                  <span className="flex-1 text-sm truncate font-mono">
+                  <span className="w-full sm:w-auto sm:flex-1 text-xs sm:text-sm truncate font-mono">
                     /share/{share.token}
                   </span>
                   <span

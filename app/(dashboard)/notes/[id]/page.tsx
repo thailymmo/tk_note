@@ -84,8 +84,8 @@ export default function NoteEditorPage() {
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-4">
+    <div className="p-3 sm:p-6 max-w-4xl mx-auto">
+      <div className="flex items-center justify-between mb-3 sm:mb-4">
         <button
           onClick={() => router.push("/notes")}
           className="flex items-center gap-1 text-sm text-text-secondary hover:text-text transition-colors"
@@ -94,25 +94,25 @@ export default function NoteEditorPage() {
           Back
         </button>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {saving && (
-            <span className="flex items-center gap-1 text-sm text-text-secondary">
+            <span className="flex items-center gap-1 text-xs sm:text-sm text-text-secondary">
               <Loader2 className="w-3 h-3 animate-spin" />
-              Saving...
+              <span className="hidden sm:inline">Saving...</span>
             </span>
           )}
           {saved && (
-            <span className="flex items-center gap-1 text-sm text-success">
+            <span className="flex items-center gap-1 text-xs sm:text-sm text-success">
               <Check className="w-3 h-3" />
-              Saved
+              <span className="hidden sm:inline">Saved</span>
             </span>
           )}
           <button
             onClick={() => setShareOpen(true)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border hover:bg-bg-secondary transition-colors text-sm"
+            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg border border-border hover:bg-bg-secondary transition-colors text-sm"
           >
             <Share2 className="w-4 h-4" />
-            Share
+            <span className="hidden sm:inline">Share</span>
           </button>
         </div>
       </div>
@@ -121,7 +121,7 @@ export default function NoteEditorPage() {
         type="text"
         value={note.title}
         onChange={(e) => handleTitleChange(e.target.value)}
-        className="w-full text-3xl font-bold bg-transparent border-none outline-none mb-4 placeholder-text-secondary"
+        className="w-full text-xl sm:text-3xl font-bold bg-transparent border-none outline-none mb-3 sm:mb-4 placeholder-text-secondary"
         placeholder="Note title..."
       />
 

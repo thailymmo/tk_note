@@ -11,6 +11,8 @@ import {
   Sun,
   Moon,
   FolderOpen,
+  Menu,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +28,7 @@ export function Sidebar() {
   const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const [dark, setDark] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setDark(document.documentElement.classList.contains("dark"));
@@ -34,6 +37,11 @@ export function Sidebar() {
       .then((d) => setUser(d.user))
       .catch(() => {});
   }, []);
+
+  // Close sidebar on route change (mobile)
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   const toggleTheme = () => {
     const next = !dark;
@@ -55,6 +63,10 @@ export function Sidebar() {
     }
   };
 
+  const navigate = (href: string) => {
+    router.push(href);
+  };
+
   const navItems = [
     { label: "My Notes", icon: FileText, href: "/notes" },
   ];
@@ -64,15 +76,23 @@ export function Sidebar() {
     { label: "All Notes", icon: FolderOpen, href: "/admin/notes" },
   ];
 
-  return (
-    <aside className="w-64 h-screen bg-bg-secondary border-r border-border flex flex-col fixed left-0 top-0">
-      <div className="p-4 border-b border-border">
-        <h1 className="text-xl font-bold text-primary">Notes</h1>
-        {user && (
-          <p className="text-sm text-text-secondary mt-1 truncate">
-            {user.name}
-          </p>
-        )}
+  const sidebarContent = (
+    <>
+      <div className="p-4 border-b border-border flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-primary">Notes</h1>
+          {user && (
+            <p className="text-sm text-text-secondary mt-1 truncate">
+              {user.name}
+            </p>
+          )}
+        </div>
+        <button
+          onClick={() => setOpen(false)}
+          className="lg:hidden p-1.5 rounded-lg hover:bg-bg-tertiary"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       <div className="p-3">
@@ -85,14 +105,14 @@ export function Sidebar() {
         </button>
       </div>
 
-      <nav className="flex-1 p-3 space-y-1">
+      <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = pathname === item.href;
           return (
             <button
               key={item.href}
-              onClick={() => router.push(item.href)}
+              onClick={() => navigate(item.href)}
               className={cn(
                 "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors",
                 active
@@ -120,7 +140,7 @@ export function Sidebar() {
               return (
                 <button
                   key={item.href}
-                  onClick={() => router.push(item.href)}
+                  onClick={() => navigate(item.href)}
                   className={cn(
                     "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors",
                     active
@@ -153,6 +173,40 @@ export function Sidebar() {
           Sign Out
         </button>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Mobile top bar */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-bg-secondary border-b border-border px-4 py-3 flex items-center justify-between">
+        <button
+          onClick={() => setOpen(true)}
+          className="p-1.5 rounded-lg hover:bg-bg-tertiary"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+        <h1 className="text-lg font-bold text-primary">Notes</h1>
+        <div className="w-8" />
+      </div>
+
+      {/* Mobile overlay */}
+      {open && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/50 z-40"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={cn(
+          "fixed top-0 left-0 h-screen bg-bg-secondary border-r border-border flex flex-col z-50 w-64 transition-transform duration-200",
+          open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        )}
+      >
+        {sidebarContent}
+      </aside>
+    </>
   );
 }

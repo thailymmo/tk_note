@@ -82,15 +82,16 @@ export default function NotesPage() {
   }
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">My Notes</h1>
+    <div className="p-4 sm:p-6 max-w-5xl mx-auto">
+      <div className="flex items-center justify-between mb-4 sm:mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold">My Notes</h1>
         <button
           onClick={createNote}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-hover transition-colors text-sm font-medium"
+          className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-hover transition-colors text-sm font-medium"
         >
           <Plus className="w-4 h-4" />
-          New Note
+          <span className="hidden sm:inline">New Note</span>
+          <span className="sm:hidden">New</span>
         </button>
       </div>
 
@@ -120,14 +121,14 @@ export default function NotesPage() {
             <div
               key={note.id}
               onClick={() => router.push(`/notes/${note.id}`)}
-              className="group p-4 bg-bg-secondary border border-border rounded-xl hover:border-primary/50 cursor-pointer transition-colors"
+              className="group p-3 sm:p-4 bg-bg-secondary border border-border rounded-xl hover:border-primary/50 cursor-pointer transition-colors"
             >
-              <div className="flex items-start justify-between">
+              <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold truncate">
+                  <h3 className="font-semibold truncate text-sm sm:text-base">
                     {note.title || "Untitled"}
                   </h3>
-                  <p className="text-sm text-text-secondary mt-1 line-clamp-2">
+                  <p className="text-xs sm:text-sm text-text-secondary mt-1 line-clamp-2">
                     {getPreview(note.content)}
                   </p>
                   <p className="text-xs text-text-secondary mt-2">
@@ -136,7 +137,7 @@ export default function NotesPage() {
                 </div>
                 <button
                   onClick={(e) => deleteNote(note.id, e)}
-                  className="p-2 rounded-lg text-text-secondary hover:text-danger hover:bg-bg-tertiary opacity-0 group-hover:opacity-100 transition-all"
+                  className="p-2 rounded-lg text-text-secondary hover:text-danger hover:bg-bg-tertiary opacity-100 sm:opacity-0 group-hover:opacity-100 transition-all shrink-0"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>

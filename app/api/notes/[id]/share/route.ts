@@ -16,26 +16,13 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const user = getUser(request);
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
+  const [note] = await db.select().from(notes).where(and(eq(notes.id, id), eq(notes.userId, user.userId)));
+  if (!note) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const [note] = await db
-    .select()
-    .from(notes)
-    .where(and(eq(notes.id, id), eq(notes.userId, user.userId)));
-
-  if (!note) {
-    return NextResponse.json({ error: "Note not found" }, { status: 404 });
-  }
-
-  const links = await db
-    .select()
-    .from(shareLinks)
-    .where(eq(shareLinks.noteId, id));
-
+  const links = await db.select().from(shareLinks).where(eq(shareLinks.noteId, id));
   return NextResponse.json({ shares: links });
 }
 
@@ -44,21 +31,13 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const user = getUser(request);
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
   const body = await request.json();
 
-  const [note] = await db
-    .select()
-    .from(notes)
-    .where(and(eq(notes.id, id), eq(notes.userId, user.userId)));
-
-  if (!note) {
-    return NextResponse.json({ error: "Note not found" }, { status: 404 });
-  }
+  const [note] = await db.select().from(notes).where(and(eq(notes.id, id), eq(notes.userId, user.userId)));
+  if (!note) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const mode = body.mode === "editable" ? "editable" : "readonly";
 
@@ -68,6 +47,7 @@ export async function POST(
       noteId: id,
       token: nanoid(),
       mode,
+      password: body.password || null,
     })
     .returning();
 
@@ -79,31 +59,17 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const user = getUser(request);
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
   const { searchParams } = new URL(request.url);
   const shareId = searchParams.get("shareId");
 
-  if (!shareId) {
-    return NextResponse.json(
-      { error: "shareId is required" },
-      { status: 400 }
-    );
-  }
+  if (!shareId) return NextResponse.json({ error: "shareId required" }, { status: 400 });
 
-  const [note] = await db
-    .select()
-    .from(notes)
-    .where(and(eq(notes.id, id), eq(notes.userId, user.userId)));
-
-  if (!note) {
-    return NextResponse.json({ error: "Note not found" }, { status: 404 });
-  }
+  const [note] = await db.select().from(notes).where(and(eq(notes.id, id), eq(notes.userId, user.userId)));
+  if (!note) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   await db.delete(shareLinks).where(eq(shareLinks.id, shareId));
-
   return NextResponse.json({ ok: true });
 }

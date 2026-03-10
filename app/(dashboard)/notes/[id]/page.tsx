@@ -4,12 +4,15 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { TiptapEditor } from "@/components/editor/tiptap-editor";
 import { ShareDialog } from "@/components/notes/share-dialog";
+import { LinkManager, type NoteLink } from "@/components/notes/link-manager";
 import { ArrowLeft, Share2, Check, Loader2 } from "lucide-react";
 
 interface Note {
   id: string;
   title: string;
   content: string;
+  links: string;
+  slug: string | null;
   updatedAt: string;
 }
 
@@ -23,9 +26,11 @@ export default function NoteEditorPage() {
   const [saved, setSaved] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [links, setLinks] = useState<NoteLink[]>([]);
 
   const titleRef = useRef<string>("");
   const contentRef = useRef<string>("");
+  const linksRef = useRef<NoteLink[]>([]);
   const timeoutRef = useRef<NodeJS.Timeout>(undefined);
 
   useEffect(() => {
@@ -38,6 +43,11 @@ export default function NoteEditorPage() {
         setNote(d.note);
         titleRef.current = d.note.title;
         contentRef.current = d.note.content;
+        const parsedLinks = (() => {
+          try { return JSON.parse(d.note.links || "[]"); } catch { return []; }
+        })();
+        setLinks(parsedLinks);
+        linksRef.current = parsedLinks;
         setLoading(false);
       })
       .catch(() => router.push("/notes"));
@@ -52,6 +62,7 @@ export default function NoteEditorPage() {
       body: JSON.stringify({
         title: titleRef.current,
         content: contentRef.current,
+        links: linksRef.current,
       }),
     });
     setSaving(false);
@@ -74,6 +85,25 @@ export default function NoteEditorPage() {
     contentRef.current = value;
     debounceSave();
   };
+
+  const handleLinksChange = (newLinks: NoteLink[]) => {
+    setLinks(newLinks);
+    linksRef.current = newLinks;
+    debounceSave();
+  };
+
+  // Ctrl+S to save immediately
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+        e.preventDefault();
+        clearTimeout(timeoutRef.current);
+        save();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [save]);
 
   if (loading || !note) {
     return (
@@ -127,6 +157,13 @@ export default function NoteEditorPage() {
           onChange={(e) => handleTitleChange(e.target.value)}
           className="w-full text-xl sm:text-3xl font-bold bg-transparent border-none outline-none mb-3 sm:mb-4 placeholder-text-secondary"
           placeholder="Note title..."
+        />
+
+        {/* Link manager */}
+        <LinkManager
+          links={links}
+          slug={note.slug}
+          onChange={handleLinksChange}
         />
 
         <TiptapEditor

@@ -54,13 +54,17 @@ export async function PUT(
     return NextResponse.json({ error: "Note not found" }, { status: 404 });
   }
 
+  const updates: Record<string, unknown> = { updatedAt: new Date() };
+  if (body.title !== undefined) updates.title = body.title;
+  if (body.content !== undefined) updates.content = body.content;
+  if (body.folderId !== undefined) updates.folderId = body.folderId || null;
+  if (body.slug !== undefined) updates.slug = body.slug;
+  if (body.isPinned !== undefined) updates.isPinned = body.isPinned;
+  if (body.links !== undefined) updates.links = JSON.stringify(body.links);
+
   const [updated] = await db
     .update(notes)
-    .set({
-      title: body.title ?? note.title,
-      content: body.content ?? note.content,
-      updatedAt: new Date(),
-    })
+    .set(updates)
     .where(eq(notes.id, id))
     .returning();
 
@@ -88,6 +92,5 @@ export async function DELETE(
   }
 
   await db.delete(notes).where(eq(notes.id, id));
-
   return NextResponse.json({ ok: true });
 }

@@ -23,9 +23,11 @@ export async function GET(request: NextRequest) {
       role: users.role,
       maxNotes: users.maxNotes,
       createdAt: users.createdAt,
-      noteCount: sql<number>`(SELECT count(*) FROM notes WHERE notes.user_id = ${users.id})`.as("note_count"),
+      noteCount: count(notes.id),
     })
     .from(users)
+    .leftJoin(notes, eq(notes.userId, users.id))
+    .groupBy(users.id)
     .orderBy(users.createdAt);
 
   return NextResponse.json({ users: result });

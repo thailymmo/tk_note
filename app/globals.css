@@ -93,3 +93,33 @@ body {
 .tiptap em { font-style: italic; }
 .tiptap u { text-decoration: underline; }
 .tiptap s { text-decoration: line-through; }
+.tiptap mark {
+  background-color: #fef08a;
+  border-radius: 0.15em;
+  padding: 0.05em 0.1em;
+}
+html.dark .tiptap mark {
+  background-color: #854d0e;
+  color: #fef9c3;
+}
+.tiptap table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.5em 0;
+  overflow: hidden;
+}
+.tiptap table td,
+.tiptap table th {
+  border: 1px solid var(--color-border);
+  padding: 0.5em 0.75em;
+  min-width: 80px;
+  vertical-align: top;
+}
+.tiptap table th {
+  background: var(--color-bg-secondary);
+  font-weight: 600;
+}
+.tiptap table .selectedCell {
+  background: var(--color-primary);
+  opacity: 0.15;
+}

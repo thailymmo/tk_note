@@ -8,6 +8,13 @@
       "when": 1773129671429,
       "tag": "0000_slow_ultimates",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1773147446034,
+      "tag": "0001_foamy_stranger",
+      "breakpoints": true
     }
   ]
 }

@@ -13,6 +13,8 @@ import {
   FolderOpen,
   Menu,
   X,
+  BarChart3,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -42,16 +44,13 @@ export function Sidebar() {
     setOpen(false);
   }, [pathname]);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [open]);
 
   const toggleTheme = () => {
@@ -79,7 +78,9 @@ export function Sidebar() {
   };
 
   const navItems = [
-    { label: "My Notes", icon: FileText, href: "/notes" },
+    { label: "Quản lý ghi chú", icon: FileText, href: "/notes" },
+    { label: "Thống kê", icon: BarChart3, href: "/stats" },
+    { label: "Cài đặt", icon: Settings, href: "/settings" },
   ];
 
   const adminItems = [
@@ -91,10 +92,10 @@ export function Sidebar() {
     <>
       <div className="p-4 border-b border-border flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-primary">Notes</h1>
+          <h1 className="text-xl font-bold text-primary">NOTES</h1>
           {user && (
             <p className="text-sm text-text-secondary mt-1 truncate max-w-[160px]">
-              {user.name}
+              {user.email}
             </p>
           )}
         </div>
@@ -112,14 +113,14 @@ export function Sidebar() {
           className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg bg-primary text-white hover:bg-primary-hover transition-colors text-sm font-medium active:scale-[0.98] touch-manipulation"
         >
           <Plus className="w-4 h-4" />
-          New Note
+          Tạo ghi chú mới
         </button>
       </div>
 
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const active = pathname === item.href;
+          const active = pathname === item.href || pathname.startsWith(item.href + "/");
           return (
             <button
               key={item.href}
@@ -181,43 +182,30 @@ export function Sidebar() {
           className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-danger hover:bg-bg-tertiary transition-colors touch-manipulation"
         >
           <LogOut className="w-4 h-4" />
-          Sign Out
+          Đăng xuất
         </button>
       </div>
 
-      {/* iOS safe area */}
       <div className="h-[env(safe-area-inset-bottom)] lg:hidden" />
     </>
   );
 
   return (
     <>
-      {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-30 bg-bg-secondary/95 backdrop-blur-sm border-b border-border px-3 py-2.5 flex items-center justify-between">
-        <button
-          onClick={() => setOpen(true)}
-          className="p-2 rounded-lg hover:bg-bg-tertiary touch-manipulation"
-        >
+        <button onClick={() => setOpen(true)} className="p-2 rounded-lg hover:bg-bg-tertiary touch-manipulation">
           <Menu className="w-5 h-5" />
         </button>
-        <h1 className="text-lg font-bold text-primary">Notes</h1>
-        <button
-          onClick={createNote}
-          className="p-2 rounded-lg hover:bg-bg-tertiary text-primary touch-manipulation"
-        >
+        <h1 className="text-lg font-bold text-primary">NOTES</h1>
+        <button onClick={createNote} className="p-2 rounded-lg hover:bg-bg-tertiary text-primary touch-manipulation">
           <Plus className="w-5 h-5" />
         </button>
       </div>
 
-      {/* Mobile overlay */}
       {open && (
-        <div
-          className="lg:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-[2px]"
-          onClick={() => setOpen(false)}
-        />
+        <div className="lg:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-[2px]" onClick={() => setOpen(false)} />
       )}
 
-      {/* Sidebar */}
       <aside
         className={cn(
           "fixed top-0 left-0 h-full bg-bg-secondary border-r border-border flex flex-col z-50 w-72 sm:w-64 transition-transform duration-200 ease-out",

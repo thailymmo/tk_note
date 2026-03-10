@@ -62,23 +62,28 @@ export function ShareDialog({ noteId, open, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 sm:p-4">
-      <div className="bg-bg rounded-t-xl sm:rounded-xl border border-border w-full max-w-lg shadow-xl max-h-[80vh] overflow-y-auto">
+      <div className="bg-bg rounded-t-2xl sm:rounded-xl border border-border w-full sm:max-w-lg shadow-xl max-h-[85vh] overflow-y-auto">
+        {/* Mobile drag handle */}
+        <div className="sm:hidden flex justify-center pt-2">
+          <div className="w-10 h-1 rounded-full bg-border" />
+        </div>
+
         <div className="flex items-center justify-between p-4 border-b border-border">
-          <h2 className="text-lg font-semibold flex items-center gap-2">
+          <h2 className="text-base sm:text-lg font-semibold flex items-center gap-2">
             <LinkIcon className="w-5 h-5" />
             Share Note
           </h2>
-          <button onClick={onClose} className="p-1 hover:bg-bg-tertiary rounded-lg">
+          <button onClick={onClose} className="p-2 hover:bg-bg-tertiary rounded-lg touch-manipulation">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="p-4 space-y-4">
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <select
               value={mode}
               onChange={(e) => setMode(e.target.value as "readonly" | "editable")}
-              className="flex-1 px-3 py-2 rounded-lg border border-border bg-bg text-text text-sm"
+              className="w-full sm:flex-1 px-3 py-2.5 sm:py-2 rounded-lg border border-border bg-bg text-text text-base sm:text-sm"
             >
               <option value="readonly">Read Only</option>
               <option value="editable">Can Edit</option>
@@ -86,7 +91,7 @@ export function ShareDialog({ noteId, open, onClose }: Props) {
             <button
               onClick={createShare}
               disabled={loading}
-              className="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-hover text-sm font-medium disabled:opacity-50"
+              className="w-full sm:w-auto px-4 py-2.5 sm:py-2 rounded-lg bg-primary text-white hover:bg-primary-hover text-sm font-medium disabled:opacity-50 active:scale-[0.98] touch-manipulation"
             >
               Create Link
             </button>
@@ -100,43 +105,50 @@ export function ShareDialog({ noteId, open, onClose }: Props) {
               {shares.map((share) => (
                 <div
                   key={share.id}
-                  className="flex flex-wrap sm:flex-nowrap items-center gap-2 p-3 bg-bg-secondary rounded-lg"
+                  className="p-3 bg-bg-secondary rounded-lg space-y-2 sm:space-y-0"
                 >
-                  <span className="w-full sm:w-auto sm:flex-1 text-xs sm:text-sm truncate font-mono">
-                    /share/{share.token}
-                  </span>
-                  <span
-                    className={`text-xs px-2 py-0.5 rounded-full ${
-                      share.mode === "editable"
-                        ? "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300"
-                        : "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
-                    }`}
-                  >
-                    {share.mode}
-                  </span>
-                  <button
-                    onClick={() => copyLink(share.token)}
-                    className="p-1.5 hover:bg-bg-tertiary rounded-md"
-                    title="Copy link"
-                  >
-                    {copied === share.token ? (
-                      <Check className="w-4 h-4 text-success" />
-                    ) : (
-                      <Copy className="w-4 h-4" />
-                    )}
-                  </button>
-                  <button
-                    onClick={() => deleteShare(share.id)}
-                    className="p-1.5 hover:bg-bg-tertiary rounded-md text-danger"
-                    title="Delete link"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs sm:text-sm truncate font-mono flex-1 min-w-0">
+                      /share/{share.token}
+                    </span>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded-full whitespace-nowrap ${
+                          share.mode === "editable"
+                            ? "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300"
+                            : "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+                        }`}
+                      >
+                        {share.mode}
+                      </span>
+                      <button
+                        onClick={() => copyLink(share.token)}
+                        className="p-2 hover:bg-bg-tertiary rounded-md touch-manipulation"
+                        title="Copy link"
+                      >
+                        {copied === share.token ? (
+                          <Check className="w-4 h-4 text-success" />
+                        ) : (
+                          <Copy className="w-4 h-4" />
+                        )}
+                      </button>
+                      <button
+                        onClick={() => deleteShare(share.id)}
+                        className="p-2 hover:bg-bg-tertiary rounded-md text-danger touch-manipulation"
+                        title="Delete link"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
           )}
         </div>
+
+        {/* Safe area padding for iOS */}
+        <div className="h-[env(safe-area-inset-bottom)] sm:hidden" />
       </div>
     </div>
   );

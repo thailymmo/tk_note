@@ -31,7 +31,7 @@ export function TiptapEditor({ content, onChange, editable = true }: Props) {
     immediatelyRender: false,
     editorProps: {
       attributes: {
-        class: "tiptap outline-none min-h-[300px] p-4",
+        class: "tiptap outline-none min-h-[200px] sm:min-h-[300px] p-3 sm:p-4 text-base sm:text-base",
       },
     },
   });
@@ -39,7 +39,7 @@ export function TiptapEditor({ content, onChange, editable = true }: Props) {
   if (!editor) return null;
 
   return (
-    <div className="border border-border rounded-xl overflow-hidden bg-bg">
+    <div className="border border-border rounded-lg sm:rounded-xl overflow-hidden bg-bg">
       {editable && <Toolbar editor={editor} />}
       <EditorContent editor={editor} />
     </div>

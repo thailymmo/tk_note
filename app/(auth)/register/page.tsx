@@ -34,15 +34,15 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="w-full max-w-sm">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-primary">Notes</h1>
-        <p className="text-text-secondary mt-2">Create your account</p>
+    <div className="w-full max-w-sm px-4 sm:px-0">
+      <div className="text-center mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-primary">Notes</h1>
+        <p className="text-text-secondary mt-2 text-sm sm:text-base">Create your account</p>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="bg-bg-secondary border border-border rounded-xl p-6 space-y-4"
+        className="bg-bg-secondary border border-border rounded-xl p-4 sm:p-6 space-y-4"
       >
         {error && (
           <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 text-danger text-sm">
@@ -57,7 +57,7 @@ export default function RegisterPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="w-full px-3 py-2 rounded-lg border border-border bg-bg text-text text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="w-full px-3 py-2.5 sm:py-2 rounded-lg border border-border bg-bg text-text text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             placeholder="Your name"
           />
         </div>
@@ -69,7 +69,7 @@ export default function RegisterPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-3 py-2 rounded-lg border border-border bg-bg text-text text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="w-full px-3 py-2.5 sm:py-2 rounded-lg border border-border bg-bg text-text text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             placeholder="you@example.com"
           />
         </div>
@@ -82,7 +82,7 @@ export default function RegisterPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            className="w-full px-3 py-2 rounded-lg border border-border bg-bg text-text text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="w-full px-3 py-2.5 sm:py-2 rounded-lg border border-border bg-bg text-text text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
             placeholder="Min 6 characters"
           />
         </div>
@@ -90,7 +90,7 @@ export default function RegisterPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-2 rounded-lg bg-primary text-white hover:bg-primary-hover transition-colors text-sm font-medium disabled:opacity-50"
+          className="w-full py-2.5 sm:py-2 rounded-lg bg-primary text-white hover:bg-primary-hover transition-colors text-sm font-medium disabled:opacity-50 active:scale-[0.98]"
         >
           {loading ? "Creating account..." : "Create Account"}
         </button>

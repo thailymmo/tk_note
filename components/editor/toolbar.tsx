@@ -64,10 +64,10 @@ export function Toolbar({ editor }: Props) {
   ];
 
   return (
-    <div className="flex flex-wrap items-center gap-0.5 border-b border-border p-2 bg-bg-secondary">
+    <div className="flex flex-wrap items-center gap-0.5 border-b border-border p-1.5 sm:p-2 bg-bg-secondary overflow-x-auto">
       {buttons.map((btn, i) => {
         if (!btn) {
-          return <div key={i} className="w-px h-6 bg-border mx-1" />;
+          return <div key={i} className="w-px h-5 sm:h-6 bg-border mx-0.5 sm:mx-1 hidden sm:block" />;
         }
         const Icon = btn.icon;
         return (
@@ -76,11 +76,11 @@ export function Toolbar({ editor }: Props) {
             type="button"
             onClick={btn.action}
             className={cn(
-              "p-1.5 rounded-md hover:bg-bg-tertiary transition-colors",
+              "p-1.5 sm:p-1.5 rounded-md hover:bg-bg-tertiary transition-colors touch-manipulation",
               btn.active && "bg-bg-tertiary text-primary"
             )}
           >
-            <Icon className="w-4 h-4" />
+            <Icon className="w-4 h-4 sm:w-4 sm:h-4" />
           </button>
         );
       })}

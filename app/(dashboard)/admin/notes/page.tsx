@@ -28,24 +28,24 @@ export default function AdminNotesPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-[60vh]">
         <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full" />
       </div>
     );
   }
 
   return (
-    <div className="p-4 sm:p-6 max-w-5xl mx-auto">
-      <div className="flex items-center gap-2 mb-4 sm:mb-6">
-        <FolderOpen className="w-5 sm:w-6 h-5 sm:h-6 text-primary" />
-        <h1 className="text-xl sm:text-2xl font-bold">All Notes</h1>
-        <span className="text-sm text-text-secondary ml-1 sm:ml-2">
+    <div className="p-3 sm:p-6 max-w-5xl mx-auto">
+      <div className="flex items-center gap-2 mb-3 sm:mb-6">
+        <FolderOpen className="w-5 h-5 text-primary" />
+        <h1 className="text-lg sm:text-2xl font-bold">All Notes</h1>
+        <span className="text-xs sm:text-sm text-text-secondary">
           ({notes.length})
         </span>
       </div>
 
       {/* Desktop table */}
-      <div className="hidden md:block border border-border rounded-xl overflow-hidden">
+      <div className="hidden lg:block border border-border rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-bg-secondary border-b border-border">
@@ -89,15 +89,15 @@ export default function AdminNotesPage() {
         </table>
       </div>
 
-      {/* Mobile card layout */}
-      <div className="md:hidden space-y-3">
+      {/* Mobile + tablet card layout */}
+      <div className="lg:hidden space-y-2 sm:space-y-3">
         {notes.map((note) => (
           <div
             key={note.id}
-            className="bg-bg-secondary border border-border rounded-xl p-4 space-y-2"
+            className="bg-bg-secondary border border-border rounded-xl p-3 sm:p-4 space-y-1.5"
           >
             <div className="flex items-start justify-between gap-2">
-              <h3 className="font-semibold text-sm">
+              <h3 className="font-semibold text-sm sm:text-base truncate flex-1 min-w-0">
                 {note.title || "Untitled"}
               </h3>
               {note.shareCount > 0 && (
@@ -107,12 +107,12 @@ export default function AdminNotesPage() {
                 </span>
               )}
             </div>
-            <p className="text-sm text-text-secondary">
+            <p className="text-xs sm:text-sm text-text-secondary truncate">
               {note.ownerName} &middot; {note.ownerEmail}
             </p>
             <div className="flex gap-3 text-xs text-text-secondary">
-              <span>Created: {new Date(note.createdAt).toLocaleDateString()}</span>
-              <span>Updated: {new Date(note.updatedAt).toLocaleDateString()}</span>
+              <span>{new Date(note.createdAt).toLocaleDateString()}</span>
+              <span>Updated {new Date(note.updatedAt).toLocaleDateString()}</span>
             </div>
           </div>
         ))}

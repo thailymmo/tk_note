@@ -77,59 +77,64 @@ export default function NoteEditorPage() {
 
   if (loading || !note) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-[60vh]">
         <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full" />
       </div>
     );
   }
 
   return (
-    <div className="p-3 sm:p-6 max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-3 sm:mb-4">
-        <button
-          onClick={() => router.push("/notes")}
-          className="flex items-center gap-1 text-sm text-text-secondary hover:text-text transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back
-        </button>
-
-        <div className="flex items-center gap-2 sm:gap-3">
-          {saving && (
-            <span className="flex items-center gap-1 text-xs sm:text-sm text-text-secondary">
-              <Loader2 className="w-3 h-3 animate-spin" />
-              <span className="hidden sm:inline">Saving...</span>
-            </span>
-          )}
-          {saved && (
-            <span className="flex items-center gap-1 text-xs sm:text-sm text-success">
-              <Check className="w-3 h-3" />
-              <span className="hidden sm:inline">Saved</span>
-            </span>
-          )}
+    <div className="max-w-4xl mx-auto">
+      {/* Sticky top bar for editor */}
+      <div className="sticky top-[52px] lg:top-0 z-10 bg-bg/95 backdrop-blur-sm border-b border-border px-3 sm:px-6 py-2.5">
+        <div className="flex items-center justify-between">
           <button
-            onClick={() => setShareOpen(true)}
-            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg border border-border hover:bg-bg-secondary transition-colors text-sm"
+            onClick={() => router.push("/notes")}
+            className="flex items-center gap-1 text-sm text-text-secondary hover:text-text transition-colors touch-manipulation p-1 -ml-1"
           >
-            <Share2 className="w-4 h-4" />
-            <span className="hidden sm:inline">Share</span>
+            <ArrowLeft className="w-4 h-4" />
+            <span className="hidden sm:inline">Back</span>
           </button>
+
+          <div className="flex items-center gap-2">
+            {saving && (
+              <span className="flex items-center gap-1 text-xs text-text-secondary">
+                <Loader2 className="w-3 h-3 animate-spin" />
+                <span className="hidden sm:inline">Saving...</span>
+              </span>
+            )}
+            {saved && (
+              <span className="flex items-center gap-1 text-xs text-success">
+                <Check className="w-3 h-3" />
+                <span className="hidden sm:inline">Saved</span>
+              </span>
+            )}
+            <button
+              onClick={() => setShareOpen(true)}
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg border border-border hover:bg-bg-secondary transition-colors text-sm touch-manipulation"
+            >
+              <Share2 className="w-4 h-4" />
+              <span className="hidden sm:inline">Share</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      <input
-        type="text"
-        value={note.title}
-        onChange={(e) => handleTitleChange(e.target.value)}
-        className="w-full text-xl sm:text-3xl font-bold bg-transparent border-none outline-none mb-3 sm:mb-4 placeholder-text-secondary"
-        placeholder="Note title..."
-      />
+      <div className="p-3 sm:p-6">
+        <input
+          type="text"
+          value={note.title}
+          onChange={(e) => handleTitleChange(e.target.value)}
+          className="w-full text-xl sm:text-3xl font-bold bg-transparent border-none outline-none mb-3 sm:mb-4 placeholder-text-secondary"
+          placeholder="Note title..."
+        />
 
-      <TiptapEditor
-        content={note.content}
-        onChange={handleContentChange}
-        editable={true}
-      />
+        <TiptapEditor
+          content={note.content}
+          onChange={handleContentChange}
+          editable={true}
+        />
+      </div>
 
       <ShareDialog
         noteId={id}

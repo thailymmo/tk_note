@@ -60,24 +60,24 @@ export default function AdminUsersPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-[60vh]">
         <div className="animate-spin w-8 h-8 border-2 border-primary border-t-transparent rounded-full" />
       </div>
     );
   }
 
   return (
-    <div className="p-4 sm:p-6 max-w-5xl mx-auto">
-      <div className="flex items-center gap-2 mb-4 sm:mb-6">
-        <Users className="w-5 sm:w-6 h-5 sm:h-6 text-primary" />
-        <h1 className="text-xl sm:text-2xl font-bold">User Management</h1>
-        <span className="text-sm text-text-secondary ml-1 sm:ml-2">
+    <div className="p-3 sm:p-6 max-w-5xl mx-auto">
+      <div className="flex items-center gap-2 mb-3 sm:mb-6">
+        <Users className="w-5 h-5 text-primary" />
+        <h1 className="text-lg sm:text-2xl font-bold">Users</h1>
+        <span className="text-xs sm:text-sm text-text-secondary">
           ({users.length})
         </span>
       </div>
 
       {/* Desktop table */}
-      <div className="hidden md:block border border-border rounded-xl overflow-hidden">
+      <div className="hidden lg:block border border-border rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-bg-secondary border-b border-border">
@@ -185,20 +185,20 @@ export default function AdminUsersPage() {
         </table>
       </div>
 
-      {/* Mobile card layout */}
-      <div className="md:hidden space-y-3">
+      {/* Mobile + tablet card layout */}
+      <div className="lg:hidden space-y-2 sm:space-y-3">
         {users.map((user) => (
           <div
             key={user.id}
-            className="bg-bg-secondary border border-border rounded-xl p-4 space-y-3"
+            className="bg-bg-secondary border border-border rounded-xl p-3 sm:p-4 space-y-3"
           >
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="font-semibold">{user.name}</p>
-                <p className="text-sm text-text-secondary">{user.email}</p>
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="font-semibold text-sm sm:text-base truncate">{user.name}</p>
+                <p className="text-xs sm:text-sm text-text-secondary truncate">{user.email}</p>
               </div>
               <span
-                className={`px-2 py-0.5 rounded-full text-xs ${
+                className={`px-2 py-0.5 rounded-full text-xs shrink-0 ${
                   user.role === "admin"
                     ? "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300"
                     : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
@@ -211,20 +211,20 @@ export default function AdminUsersPage() {
             {editingId === user.id ? (
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <label className="text-sm text-text-secondary w-16">Role</label>
+                  <label className="text-xs text-text-secondary w-12">Role</label>
                   <select
                     value={editValues.role}
                     onChange={(e) =>
                       setEditValues((v) => ({ ...v, role: e.target.value }))
                     }
-                    className="flex-1 px-2 py-1.5 rounded border border-border bg-bg text-sm"
+                    className="flex-1 px-2 py-2 rounded-lg border border-border bg-bg text-sm"
                   >
                     <option value="user">user</option>
                     <option value="admin">admin</option>
                   </select>
                 </div>
                 <div className="flex items-center gap-2">
-                  <label className="text-sm text-text-secondary w-16">Max</label>
+                  <label className="text-xs text-text-secondary w-12">Max</label>
                   <input
                     type="number"
                     value={editValues.maxNotes}
@@ -234,19 +234,19 @@ export default function AdminUsersPage() {
                         maxNotes: parseInt(e.target.value),
                       }))
                     }
-                    className="flex-1 px-2 py-1.5 rounded border border-border bg-bg text-sm"
+                    className="flex-1 px-2 py-2 rounded-lg border border-border bg-bg text-sm"
                   />
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => saveEdit(user.id)}
-                    className="flex-1 py-1.5 rounded-lg bg-primary text-white text-sm font-medium"
+                    className="flex-1 py-2 rounded-lg bg-primary text-white text-sm font-medium active:scale-[0.98] touch-manipulation"
                   >
                     Save
                   </button>
                   <button
                     onClick={cancelEdit}
-                    className="flex-1 py-1.5 rounded-lg border border-border text-sm"
+                    className="flex-1 py-2 rounded-lg border border-border text-sm touch-manipulation"
                   >
                     Cancel
                   </button>
@@ -254,24 +254,22 @@ export default function AdminUsersPage() {
               </div>
             ) : (
               <>
-                <div className="flex items-center gap-4 text-sm">
-                  <span className="text-text-secondary">
-                    Notes: <span className="text-text font-medium">{user.noteCount}</span> / {user.maxNotes}
+                <div className="flex items-center gap-3 text-xs sm:text-sm text-text-secondary">
+                  <span>
+                    Notes: <span className="text-text font-medium">{user.noteCount}</span>/{user.maxNotes}
                   </span>
-                  <span className="text-text-secondary">
-                    {new Date(user.createdAt).toLocaleDateString()}
-                  </span>
+                  <span>{new Date(user.createdAt).toLocaleDateString()}</span>
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => startEdit(user)}
-                    className="flex-1 py-1.5 rounded-lg border border-border text-sm hover:bg-bg-tertiary"
+                    className="flex-1 py-2 rounded-lg border border-border text-sm hover:bg-bg-tertiary touch-manipulation"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => deleteUser(user.id)}
-                    className="py-1.5 px-3 rounded-lg text-danger border border-border text-sm hover:bg-bg-tertiary"
+                    className="py-2 px-4 rounded-lg text-danger border border-border text-sm hover:bg-bg-tertiary touch-manipulation"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

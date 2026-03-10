@@ -38,10 +38,21 @@ export function Sidebar() {
       .catch(() => {});
   }, []);
 
-  // Close sidebar on route change (mobile)
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   const toggleTheme = () => {
     const next = !dark;
@@ -82,14 +93,14 @@ export function Sidebar() {
         <div>
           <h1 className="text-xl font-bold text-primary">Notes</h1>
           {user && (
-            <p className="text-sm text-text-secondary mt-1 truncate">
+            <p className="text-sm text-text-secondary mt-1 truncate max-w-[160px]">
               {user.name}
             </p>
           )}
         </div>
         <button
           onClick={() => setOpen(false)}
-          className="lg:hidden p-1.5 rounded-lg hover:bg-bg-tertiary"
+          className="lg:hidden p-2 rounded-lg hover:bg-bg-tertiary touch-manipulation"
         >
           <X className="w-5 h-5" />
         </button>
@@ -98,7 +109,7 @@ export function Sidebar() {
       <div className="p-3">
         <button
           onClick={createNote}
-          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-primary text-white hover:bg-primary-hover transition-colors text-sm font-medium"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg bg-primary text-white hover:bg-primary-hover transition-colors text-sm font-medium active:scale-[0.98] touch-manipulation"
         >
           <Plus className="w-4 h-4" />
           New Note
@@ -114,7 +125,7 @@ export function Sidebar() {
               key={item.href}
               onClick={() => navigate(item.href)}
               className={cn(
-                "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors",
+                "w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-colors touch-manipulation",
                 active
                   ? "bg-bg-tertiary text-primary font-medium"
                   : "text-text-secondary hover:bg-bg-tertiary"
@@ -142,7 +153,7 @@ export function Sidebar() {
                   key={item.href}
                   onClick={() => navigate(item.href)}
                   className={cn(
-                    "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors",
+                    "w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-colors touch-manipulation",
                     active
                       ? "bg-bg-tertiary text-primary font-medium"
                       : "text-text-secondary hover:bg-bg-tertiary"
@@ -160,40 +171,48 @@ export function Sidebar() {
       <div className="p-3 border-t border-border space-y-1">
         <button
           onClick={toggleTheme}
-          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-text-secondary hover:bg-bg-tertiary transition-colors"
+          className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-text-secondary hover:bg-bg-tertiary transition-colors touch-manipulation"
         >
           {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           {dark ? "Light Mode" : "Dark Mode"}
         </button>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-danger hover:bg-bg-tertiary transition-colors"
+          className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-danger hover:bg-bg-tertiary transition-colors touch-manipulation"
         >
           <LogOut className="w-4 h-4" />
           Sign Out
         </button>
       </div>
+
+      {/* iOS safe area */}
+      <div className="h-[env(safe-area-inset-bottom)] lg:hidden" />
     </>
   );
 
   return (
     <>
       {/* Mobile top bar */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-bg-secondary border-b border-border px-4 py-3 flex items-center justify-between">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-30 bg-bg-secondary/95 backdrop-blur-sm border-b border-border px-3 py-2.5 flex items-center justify-between">
         <button
           onClick={() => setOpen(true)}
-          className="p-1.5 rounded-lg hover:bg-bg-tertiary"
+          className="p-2 rounded-lg hover:bg-bg-tertiary touch-manipulation"
         >
           <Menu className="w-5 h-5" />
         </button>
         <h1 className="text-lg font-bold text-primary">Notes</h1>
-        <div className="w-8" />
+        <button
+          onClick={createNote}
+          className="p-2 rounded-lg hover:bg-bg-tertiary text-primary touch-manipulation"
+        >
+          <Plus className="w-5 h-5" />
+        </button>
       </div>
 
       {/* Mobile overlay */}
       {open && (
         <div
-          className="lg:hidden fixed inset-0 bg-black/50 z-40"
+          className="lg:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-[2px]"
           onClick={() => setOpen(false)}
         />
       )}
@@ -201,7 +220,7 @@ export function Sidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed top-0 left-0 h-screen bg-bg-secondary border-r border-border flex flex-col z-50 w-64 transition-transform duration-200",
+          "fixed top-0 left-0 h-full bg-bg-secondary border-r border-border flex flex-col z-50 w-72 sm:w-64 transition-transform duration-200 ease-out",
           open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
       >
